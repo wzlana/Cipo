@@ -1,2 +1,107 @@
-# Cipo
-Cipo
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Consulta de Linhas de Ônibus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 15px;
+            font-size: 1.2em;
+            width: 90%;
+            max-width: 300px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 15px;
+            font-size: 1.2em;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 90%;
+            max-width: 300px;
+            touch-action: manipulation;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: none;
+            margin: 0 10px;
+            font-size: 1em;
+        }
+        #result h2 {
+            margin-top: 0;
+            color: #007BFF;
+            font-size: 1.3em;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            font-size: 1em;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.2em;
+            }
+            input[type="text"], button {
+                font-size: 1em;
+                padding: 12px;
+            }
+            #result {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Consulta de Linhas de Ônibus</h1>
+    <div class="search-container">
+        <input type="text" id="lineInput" placeholder="Digite a linha (ex: 55-C)">
+        <button onclick="searchLine()" ontouchstart="searchLine()">Buscar</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        const busLines = [
+            { line: "02-C", plate: "LLM-2B88", type: "Ônibus", number: "20.099", route: "SANTA ROSA/CASSIMIRO", driver: "JOSÉ REGINALDO MATIAS", monitor: "VIVIANE ROCHA VIRTUOZO" },
+            { line: "04-C", plate: "KZO-3F88", type: "Ônibus", number: "20.080", route: "PONTE ALTA/CIPÓ", driver: "ONOFRE LUCAS MADALENO FILHO", monitor: "ANA CAROLINA PEREIRA DE JESUS" },
+            { line: "06-C", plate: "KOB-5F28", type: "Ônibus", number: "20.011", route: "CIPÓ DO MEIO/CAMPESTRE", driver: "REINALDO DA SILVA MARTINS", monitor: "OLGA DE OLIVEIRA SOUZA" },
+            { line: "09-C", plate: "LME-7C50", type: "Micro", number: "20.117", route: "VALE DAS FONTES/GRANJINHA/CENTRO EMBU G.", driver: "AIRTON GIRON", monitor: "ANDREA DE SOUZA DIAS" },
+            { line: "15-C", plate: "KVM-5143", type: "Ônibus", number: "20.017", route: "PAIOL VELHO/GRAMADO", driver: "FABIO PONCIANO DE ANDRADE", monitor: "ANA CLAUDIA DE ARAUJO" },
+            { line: "17-C", plate: "KXU-6H09", type: "Micro", number: "20.120", route: "PENTEADO/JUVENAL COUTINHO/CIPÓ", driver: "LOURDES DE OLIVEIRA", monitor: "SORAYA LETÍCIA CESAR DOS SANTOS" },
+            { line: "19-C", plate: "KVM-4851", type: "Ônibus", number: "20.023", route: "JARDIM ORIENTAL/CAMPESTRE/CIPÓ", driver: "JORGE AMARO ACIOLY SILVA", monitor: "LUANDAREMIM SABRINA RODRIGUES DOS REIS" },
+            { line: "20-C", plate: "KYL-6B40", type: "Ônibus", number: "20.100", route: "PONTE ALTA/PAIOL VELHO", driver: "IVO SANTOS DA SILVA", monitor: "ANA PAULA PEREIRA DE JESUS" },
+            { line: "21-C", plate: "KXS-3I56", type: "Ônibus", number: "20.091", route: "MOSSORÓ/JARDIM SILVANIA/VILA SCHUNCK", driver: "ANTONIO MARCOS FERREIRA", monitor: "RAQUEL ACIOLY HESSEL" },
+            { line: "22-C", plate: "KOL-4847", type: "Ônibus", number: "20.003", route: "MOSSORÓ/ANDRÉ SCHUNK/SEMINÁRIO/AMANDA", driver: "RAFAEL FERNANDES LOPES", monitor: "JACQUELINE DE MELO NUNES" },
+            { line: "29-C", plate: "KOP-4J92", type: "Ônibus", number: "20.002", route: "CIPÓ – VIA GRANJINHA", driver: "JOSÉ DO CARMO ALVES RODRIGUES", monitor: "ANA PAULA DA SILVA DE LIMA" },
+            { line: "34-C", plate: "LRK-9F56", type: "Ônibus", number: "20.134", route: "PQ. RECREIO/JARDIM SILVANIA", driver: "NIVALDO DE OLIVEIRA SOUZA", monitor: "ELISABETE DE LIMA CORREA" },
+            { line: "36-C", plate: "KRF-8F69", type: "Ônibus", number: "20.123", route: "MOSSORÓ/CHÁCARA HAVAI", driver: "KARINA FERREIRA DE FREITAS", monitor: "P
